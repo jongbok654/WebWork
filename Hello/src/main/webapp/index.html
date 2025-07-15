@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>index.html</title>
+
+<link rel="stylesheet" href="css/custom.css" />
+</head>
+
+<body>
+	<!-- 다 앞에 ./가 생략된 것임.   상위 폴더 갈 때는 ../ -->
+	<h1>인덱스 페이지입니다.</h1>
+	<ul>
+		<li><a href="study.html">공부하기</a></li>
+		<!-- tomcat 서버 내에서의 절대경로 ..   Hello라는 서버에서 작성중이기 때문에-->
+		<li><a href="/Hello/study.html">절대경로 이용해서 놀러가기</a></li>
+		<!-- web 에서의 절대경로 -->
+		<li><a href="http://localhost:8888/Hello/study.html">http 이용해서 놀러가기</a>
+		<li><a href="sub/play.html">놀기</a></li>
+		<li><a href="images/SouthKorea.png">대한민국 이미지</a></li>
+		<li><a href="/Hello/css/custom.css">절대경로로 css 보기</a></li>
+		<li><a href="/Hello/js/my-script.js">절대경로로 javascript 보기</a></li>
+		<li><a href="/Hello/fortune">오늘의 운세 보기</a></li>
+		<li><a href="/Hello/members">회원 목록</a></li>
+
+
+	</ul>
+	<a href="study.html">공부하기</a>
+	<a href="sub/play.html">놀러가기</a>
+
+	<a href="images/SouthKorea.png">한국 사진 보기</a>
+	<img src="images/SouthKorea.png" alt="대한민국" />
+
+</body>
+</html>
