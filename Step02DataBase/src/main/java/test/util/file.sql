@@ -1,0 +1,20 @@
+CREATE TABLE users(
+num NUMBER PRIMARY KEY,
+userName VARCHAR2(20) UNIQUE,
+passWord VARCHAR2(100) NOT NULL,
+email VARCHAR2(100) UNIQUE,
+profileImage VARCHAR2(100),
+role VARCHAR2(10) DEFAULT 'ROLE_USER',
+updatedAt DATE,
+createdAt DATE
+);
+
+CREATE SEQUENCE users_seq;
+
+CREATE TABLE member(
+num NUMBER PRIMARY KEY,
+name VARCHAR2(20),
+addr VARCHAR2(100)
+);
+
+CREATE SEQUENCE member_seq;
