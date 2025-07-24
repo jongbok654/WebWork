@@ -1,9 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	
-	<% 
-		String userName=(String)session.getAttribute("userName");
-	%> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,23 +8,12 @@
 <jsp:include page="/WEB-INF/include/resource.jsp"></jsp:include>
 </head>
 <body>
-   <jsp:include page="/WEB-INF/include/navbar.jsp">
-   		<jsp:param value="index" name="thisPage" />
-   </jsp:include>
-    	
+	<jsp:include page="/WEB-INF/include/navbar.jsp">
+		<jsp:param value="index" name="thisPage" />
+	</jsp:include>
 	<div class="container">
-	<%if(userName !=null){ %>
-		<strong><%=userName %></strong>님 로그인중.....
-	<%} %>
-		<h1>인덱스 페이지 입니다.</h1>
-		<ul>
-			<li><a
-				href="${pageContext.request.contextPath }/member/list.jsp">회원목록</a></li>
-			<li><a href="${pageContext.request.contextPath }/book/list.jsp">책목록</a></li>
-			<li><a href="${pageContext.request.contextPath }/user/signup-form.jsp">회원가입</a></li>
-		</ul>
-
-		<div id="carouselExampleIndicators" class="carousel slide">
+		<h1>인덱스 페이지 입니다</h1>
+		<div id="carouselExampleIndicators" class="carousel slide"data-bs-ride="carousel" data-bs-interval="3000">
 			<div class="carousel-indicators">
 				<button type="button" data-bs-target="#carouselExampleIndicators"
 					data-bs-slide-to="0" class="active" aria-current="true"
@@ -59,21 +44,8 @@
 				<span class="carousel-control-next-icon" aria-hidden="true"></span>
 				<span class="visually-hidden">Next</span>
 			</button>
-			<footer class="bg-primary text-white py-4 mt-5">
-				<div
-					class="container d-flex justify-content-between align-items-center flex-wrap">
-					<div>
-						<h5 class="mb-0">MyBrand</h5>
-					</div>
-					<div>
-						<a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
-						<a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
-						<a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
-					</div>
-				</div>
-			</footer>
 		</div>
 	</div>
-	
+	<jsp:include page="/WEB-INF/include/footer.jsp"></jsp:include>
 </body>
 </html>

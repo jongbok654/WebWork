@@ -1,12 +1,12 @@
+<%@page import="test.dao.BookDao"%>
 <%@page import="java.util.List"%>
-<%@page import="test2.dao.BookDao"%>
-<%@page import="test2.dto.BookDto"%>
+<%@page import="test.dto.BookDto"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
 <%
 BookDao dao = new BookDao();
-List<BookDto> list = new BookDao().selectAll();
+List<BookDto> list = dao.selectAll();
 %>
 <!DOCTYPE html>
 <html>
@@ -20,8 +20,7 @@ List<BookDto> list = new BookDao().selectAll();
 		<jsp:param value="book" name="thisPage"/>
 	</jsp:include>
 	<div class="container">
-		<a href="${pageContext.request.contextPath }/book/insertform.jsp">회원
-			추가</a>
+		<a href="${pageContext.request.contextPath }/book/insertform.jsp">책 추가</a>
 		<h1>책 목록</h1>
 		<table>
 			<tr>

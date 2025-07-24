@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="org.mindrot.jbcrypt.BCrypt"%>
 <%@page import="test.dto.UserDto"%>
 <%@page import="test.dao.UserDao"%>
@@ -7,18 +8,22 @@
 //폼 전송되는 아이디와 비밀번호 추출하기
 String userName = request.getParameter("userName");
 String password = request.getParameter("password");
+//로그인 후에 가야할 목적지 정보
+String url = request.getParameter("url");
+//로그인 실패를 대비해서 목적지 정보를 인코딩한 결과도 준비하기
+String encodeUrl = URLEncoder.encode(url, "UTF-8");
 
 //아이디 비밀번호가 유효한 정보인지 여부
-boolean isValid=false;
+boolean isValid = false;
 
 //Db에서 userName을 이용해서 select 되는 정보가 있는지 select 해본다.
-UserDto dto= new UserDao().getByUserName(userName);
+UserDto dto = UserDao.getInstance().getByUserName(userName);
 //만일 select 딘 정보가 있다면(최소한 userName 은 존재한다는 것)
-if(dto !=null){
+if (dto != null) {
 	//raw 비밀번호와 DB에 저장된 암호화된 비밀번호를 비교해서 일치 하는지 확인한다.
 	//Bcrypt.checkpw(입력한 비밀번호,암호화된 비밀벊)
 	isValid = BCrypt.checkpw(password, dto.getPassword());
-	
+
 }
 /*
 	만일 입력한 아이디와 비밀번호가 유효한 정보라면 로그인 처리를 한다
@@ -29,13 +34,13 @@ if(dto !=null){
 	세션 격체에 담긴 로그인 정보를 삭제하는 것이 "로그아웃" 이고
 	세션 객체에 로그이니 정보(userName)를 저장하는 것이 "로그인"이다.
 */
-if(isValid){
+if (isValid) {
 	//HttpSession 객체에 "userName" 이라는 키 값으로 userName을 저장한다.
-	session.setAttribute("userName",userName);
+	session.setAttribute("userName", userName);
 	//세션 유지시간 설정(초단위)
-	session.setMaxInactiveInterval(60*10);
-}
+	session.setMaxInactiveInterval(60 * 10);
 
+}
 %>
 <!DOCTYPE html>
 <html>
@@ -44,19 +49,24 @@ if(isValid){
 <title>/user/login.jsp</title>
 </head>
 <body>
-<div class="container">
-	<%if(isValid){ %>
-	<p>
-		<strong><%=userName %></strong>회원님 로그인 되었습니다.
-		<a href="${pageContext.request.contextPath }/">인덱스 페이지로</a>
-	</p>
-	<%}else{ %>
-	<p>
-		아이디 혹은 비밀번호가 틀려요
-		<a href="loginform.jsp">다시 로그인</a>
-	</p>
-	<%} %>
-</div>
+	<div class="container">
+		<%
+		if (isValid) {
+		%>
+
+		<a href="${pageContext.request.contextPath }/user/info.jsp"><%=userName%>회원님 로그인 되었습니다. </a>
+		<a href="<%=url%>">확인</a>
+
+		<%
+		} else {
+		%>
+		<p>
+			아이디 혹은 비밀번호가 틀려요 <a href="loginform.jsp?num=<%=encodeUrl%>">다시 로그인</a>
+		</p> 
+		<%
+		}
+		%>
+	</div>
 
 </body>
 </html>

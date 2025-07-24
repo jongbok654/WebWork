@@ -1,4 +1,4 @@
-package test2.dto;
+package test.dto;
 
 
 public class BookDto {
@@ -12,6 +12,7 @@ public class BookDto {
 	public BookDto() {
 		
 	}
+
 
 	public int getNum() {
 		return num;

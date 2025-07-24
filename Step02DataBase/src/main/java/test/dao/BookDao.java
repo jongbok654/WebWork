@@ -1,4 +1,4 @@
-package test2.dao;
+package test.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,9 +6,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import test.dto.BookDto;
 import test.util.DbcpBean;
-import test2.dto.BookDto;
 
 public class BookDao {
 

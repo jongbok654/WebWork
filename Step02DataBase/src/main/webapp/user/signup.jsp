@@ -20,7 +20,7 @@ dto.setPassword(hashed);
 dto.setEmail(email);
 
 //dao 해석을 이용해서 DB에 저장하고
-boolean isSuccess = new UserDao().insert(dto);
+boolean isSuccess = UserDao.getInstance().insert(dto);
 
 //응답한다.
 %>

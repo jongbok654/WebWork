@@ -9,7 +9,104 @@ import test.dto.UserDto;
 import test.util.DbcpBean;
 
 public class UserDao {
-	//회원정보 추가
+	//static 초기화 블록 (이클래스가 최초로 솨용될 때 한 1번!,상태되는 펴아이다.}
+	private static UserDao dao;
+	static {	
+		dao=new UserDao();
+		
+	}
+	
+	//외부에서 UserDao 객체를 생성하지 못하도록 생성자를 private로 막는다.
+	private UserDao() {}
+	
+	public static UserDao getInstance() {
+		
+		return dao;
+	}
+	
+	// 이메일과 프로필을 수정하는 메소드
+	public boolean updateEmailProfile(UserDto dto) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		int rowCount = 0;
+		try {
+			conn = new DbcpBean().getConn();
+			String sql = """
+					UPDATE users
+					SET email=?, profileImage=?,updatedAt=SYSDATE
+					WHERE userName=?
+										""";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getEmail());
+			pstmt.setString(2, dto.getProfileImage());
+			pstmt.setString(3, dto.getUserName());
+
+			rowCount = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// null인지 아닌지 체크 안하면 오류가남
+				if (pstmt != null)
+					pstmt.close();
+				if (pstmt != null)
+					conn.close();
+			} catch (Exception e) {
+
+			}
+
+		}
+		// 변화된 rowCount 값을 조사해서 작업의 성공 여부를 알아낼 수 있다.
+				if (rowCount >= 0) {
+					return true;
+				} else {
+					return false;
+				}
+	}
+
+	// 이메일을 수정하는 메소드
+	public boolean updateEmail(UserDto dto) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		int rowCount = 0;
+		try {
+			conn = new DbcpBean().getConn();
+			String sql = """
+					UPDATE users
+					SET email=?,updatedAt=SYSDATE
+					WHERE userName=?
+										""";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getEmail());
+			pstmt.setString(2, dto.getUserName());
+
+			rowCount = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// null인지 아닌지 체크 안하면 오류가남
+				if (pstmt != null)
+					pstmt.close();
+				if (pstmt != null)
+					conn.close();
+			} catch (Exception e) {
+
+			}
+		}
+		// 변화된 rowCount 값을 조사해서 작업의 성공 여부를 알아낼 수 있다.
+		if (rowCount >= 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// 회원정보 추가
 	public UserDto getByUserName(String userName) {
 		UserDto dto = null;
 		// 회원 전체 몰록을 select 해서 List에 담아서 리턴하는 메소드
@@ -31,7 +128,7 @@ public class UserDao {
 
 			pstmt = conn.prepareStatement(sql);
 			// ? 에 값 바인딩
-			pstmt.setString(1,userName );// 번호는 매개변수에 있는 내용을 담으면 됨.
+			pstmt.setString(1, userName);// 번호는 매개변수에 있는 내용을 담으면 됨.
 
 			// select 문 실행하고 결과를 ResultSet 으로 받아온다
 			rs = pstmt.executeQuery();
@@ -47,7 +144,7 @@ public class UserDao {
 				dto.setRole(rs.getString("role"));
 				dto.setUpdatedAt(rs.getString("updatedAt"));
 				dto.setCreatedAt(rs.getString("createdAt"));
-				
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -66,20 +163,19 @@ public class UserDao {
 		return dto;
 
 	}
-	
-	
+
 	public boolean insert(UserDto dto) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		//변화된 row 의 갯수를 담을 변수 선언하고 0으로 초기화
+		// 변화된 row 의 갯수를 담을 변수 선언하고 0으로 초기화
 		int rowCount = 0;
 		try {
 			conn = new DbcpBean().getConn();
 			String sql = """
-				INSERT INTO users
-				(num, userName, password, email, updatedAt, createdAt)
-				VALUES(users_seq.NEXTVAL, ?, ?, ?, SYSDATE, SYSDATE)
-			""";
+						INSERT INTO users
+						(num, userName, password, email, updatedAt, createdAt)
+						VALUES(users_seq.NEXTVAL, ?, ?, ?, SYSDATE, SYSDATE)
+					""";
 			pstmt = conn.prepareStatement(sql);
 			// ? 에 순서대로 필요한 값 바인딩
 			pstmt.setString(1, dto.getUserName());
@@ -99,12 +195,54 @@ public class UserDao {
 			}
 		}
 
-		//변화된 rowCount 값을 조사해서 작업의 성공 여부를 알아 낼수 있다.
+		// 변화된 rowCount 값을 조사해서 작업의 성공 여부를 알아 낼수 있다.
 		if (rowCount > 0) {
-			return true; //작업 성공이라는 의미에서 true 리턴하기
+			return true; // 작업 성공이라는 의미에서 true 리턴하기
 		} else {
-			return false; //작업 실패라는 의미에서 false 리턴하기
+			return false; // 작업 실패라는 의미에서 false 리턴하기
 		}
 	}
-}
 
+	public boolean updatePassword(UserDto dto) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		int rowCount = 0;
+		try {
+			conn = new DbcpBean().getConn();
+			String sql = """
+					UPDATE users
+					SET password=?,updatedAt=SYSDATE
+					WHERE userName=?
+										""";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getPassword());
+			pstmt.setString(2, dto.getUserName());
+
+			rowCount = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// null인지 아닌지 체크 안하면 오류가남
+				if (pstmt != null)
+					pstmt.close();
+				if (pstmt != null)
+					conn.close();
+			} catch (Exception e) {
+
+			}
+		}
+		// 변화된 rowCount 값을 조사해서 작업의 성공 여부를 알아낼 수 있다.
+		if (rowCount >= 0) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	
+
+}
