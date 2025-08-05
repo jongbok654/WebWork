@@ -1,113 +1,62 @@
-<%@page import="test.dto.CommentDto"%>
 <%@page import="test.dao.CommentDao"%>
+<%@page import="test.dto.CommentDto"%>
+<%@page import="test.dao.GalleryDao"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="test.dto.GalleryImageDto"%>
 <%@page import="java.util.List"%>
-<%@page import="org.apache.commons.text.StringEscapeUtils"%>
-<%@page import="test.dao.BoardDao"%>
-<%@page import="test.dto.BoardDto"%>
+<%@page import="test.dto.GalleryDto"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-	//get 방식 파라미터로 전달되는 글번호 얻어내기
-	int num=Integer.parseInt(request.getParameter("num"));
-	//DB 에서 해당글의 자세한 정보를 얻어낸다.
-	BoardDto dto=BoardDao.getInstance().getByNum(num);
+	//자세히 보여줄  gallery 의 PK 얻어내기 
+	int num = Integer.parseInt(request.getParameter("num"));
+	//gallery 정보 얻어오기 
+	GalleryDto dto = test.dao.GalleryDao.getInstance().getData(num);
+	//gallery 에 업로드된 이미지 목록 얻어오기 
+	List<GalleryImageDto> images = GalleryDao.getInstance().getImageList(num);
 	//로그인된 userName (null 일 가능성 있음)
-	String userName=(String)session.getAttribute("userName");
-	//만일 본인 글 자세히 보기가 아니면 조회수를 1 증가 시킨다
-	if(!dto.getWriter().equals(userName)){
-		BoardDao.getInstance().addViewCount(num);
-	}
-	//댓글 목록을 DB 에서 읽어오기
-	List<CommentDto> commentList=CommentDao.getInstance().selectList(num);
+	String userName = (String) session.getAttribute("userName");
+	//댓글 목록 얻어내기 
+	List<CommentDto> commentList = CommentDao.getInstance().selectList(num);
 	//로그인 했는지 여부를 알아내기
-	boolean isLogin  = userName == null ? false : true;
-%>
+	boolean isLogin = userName == null ? false : true;	
+%>    
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>/board/view.jsp</title>
-<jsp:include page="/WEB-INF/include/resource.jsp"></jsp:include>
-<style>
-	/* 이 처음에는 보이지 않도록 하기 위해 */
-	.re-re{
-		display:none;
-	}
-</style>
+<title>/gallery/view.jsp</title>
+<jsp:include page="/WEB-INF/include/resource.jsp"/>
 </head>
 <body>
-	<div class="container pt-3">
-		<nav>
-		  <ol class="breadcrumb">
-		    <li class="breadcrumb-item">
-		    	<a href="${pageContext.request.contextPath }/">Home</a>
-		    </li>
-		    <li class="breadcrumb-item">
-		    	<a href="${pageContext.request.contextPath }/board/list.jsp">Board</a>
-		    </li>
-		    <li class="breadcrumb-item active">Detail</li>
-		  </ol>
-		</nav>
-		<h1>게시글 상세보기</h1>
-		<div class="btn-group mb-2">
-			<a class="btn btn-outline-secondary btn-sm <%=dto.getPrevNum()==0 ? "disabled":"" %>" href="view.jsp?num=<%=dto.getPrevNum() %>">
-				<i class="bi bi-arrow-left"></i>
-				Prev
-			</a>
-			<a class="btn btn-outline-secondary btn-sm <%=dto.getNextNum()==0 ? "disabled":"" %>" href="view.jsp?num=<%=dto.getNextNum() %>">
-				Next
-				<i class="bi bi-arrow-right"></i>
-			</a>
-		</div>
-		
-		<table class="table table-striped">
-			<colgroup>
-				<col class="col-2"/>
-				<col class="col"/>
-			</colgroup>
-			<tr>
-				<th>글번호</th>
-				<td><%=num %></td>
-			</tr>
-			<tr>
-				<th>작성자</th>
-				<td>
-					<%if(dto.getProfileImage() == null){ %>
-						<i style="font-size:100px;" class="bi bi-person-circle"></i>
-					<%}else{ %>
-						<img src="${pageContext.request.contextPath }/upload/<%=dto.getProfileImage() %>" 
-							style="width:100px;height:100px;border-radius:50%;"/>
-					<%} %>
-					<%=dto.getWriter() %>
-				</td>
-			</tr>
-			<tr>
-				<th>제목</th>
-				<td><%=StringEscapeUtils.escapeHtml4(dto.getTitle()) %></td>
-			</tr>
-			<tr>
-				<th>조회수</th>
-				<td><%=dto.getViewCount() %></td>
-			</tr>
-			<tr>
-				<th>작성일</th>
-				<td><%=dto.getCreatedAt() %></td>
-			</tr>
-		</table>
-		<div class="card mt-4">
-		  <div class="card-header bg-light">
-		    <strong>본문 내용</strong>
-		  </div>
-		  <div class="card-body p-1">
-		    <%=dto.getContent() %>
-		  </div>
-		</div>
-		<%if(dto.getWriter().equals(userName)){ %>
-			<div class="text-end pt-2">
-				<a class="btn btn-warning btn-sm" href="edit.jsp?num=<%=dto.getNum()%>">Edit</a>
-				<a class="btn btn-danger btn-sm" href="delete.jsp?num=<%=dto.getNum()%>">Delete</a>
+	<div class="container">
+		<div class="card shadow">
+			<!-- 작성자 정보 -->
+			<div class="card-header d-flex align-items-center">
+				<%if(dto.getProfileImage() == null){ %>
+					<i style="font-size:100px;" class="bi bi-person-circle"></i>
+				<%}else{ %>
+					<img src="${pageContext.request.contextPath }/upload/<%=dto.getProfileImage() %>" 
+						style="width:100px;height:100px;border-radius:50%;"/>
+				<%} %>
+				<strong class="ms-3"><%=dto.getWriter()%></strong>
+				<span class="text-muted ms-auto"><%=dto.getCreatedAt()%></span>
 			</div>
-		<%} %>
+			<!-- 본문 -->
+			<div class="card-body">
+				<h5 class="card-title"><%=dto.getTitle()%></h5>
+				<%--textarea 로 입력한 글에서 개행기호는 br 요소로 변경해서 출력하기 --%>
+				<p class="card-text"><%=dto.getContent().replaceAll("\n", "<br>")%></p>
+				<div class="row">
+					<%for (GalleryImageDto tmp: images) {%>
+						<div class="col-md-6 mb-4">
+							<img src="<%=request.getContextPath()%>/upload/<%=tmp.getSaveFileName()%>"
+							class="img-fluid rounded" alt="photo">
+						</div>
+					<%}%>
+				</div>
+			</div>			
+		</div> <!-- .card -->
 		<div class="card my-3">
 		  <div class="card-header bg-primary text-white">
 		    댓글을 입력해 주세요
@@ -131,25 +80,15 @@
 		<!-- 댓글 목록을 출력하기 -->
 		<div class="comments">
 		<%for(CommentDto tmp:commentList){ %>
-			<!-- 대댓글은 자신의 글 번호와 댓글의 그룹번호가 다르다, 그런경우 왼쪽 마진을 부여한다 -->
-		    <div class="card mb-3 <%=tmp.getNum() == tmp.getGroupNum() ? "": "ms-5 re-re" %>">
+		    <!-- 대댓글은 자신의 글번호와 댓글의 그룹번호가 다르다. 그런경우 왼쪽 마진을 부여한다 -->
+		    <div class="card mb-3 <%=tmp.getNum() == tmp.getGroupNum() ? "":"ms-5"%>">
 		    	<%if(tmp.getDeleted().equals("yes")){ %>
 		    		<div class="card-body bg-light text-muted rounded">삭제된 댓글 입니다</div>
 		    	<%}else{ %>
 		            <div class="card-body d-flex flex-column flex-sm-row position-relative">
-		             	<%if(tmp.getReplyCount() != 0 && tmp.getNum() == tmp.getGroupNum()){ %>
-		            		<button class="dropdown-btn btn btn-outline-secondary btn-sm position-absolute"
-		            			style="bottom:16px; right:16px;">
-		            			<i class="bi bi-caret-down"></i>
-		            			답글 <%=tmp.getReplyCount() %> 개
-		            		</button>
-		            	<%} %>
-		            
-		            	<%if(tmp.getNum() != tmp.getGroupNum()) {%>
-		            		<i class="bi bi-arrow-return-right position-absolute" style="top:0;left:30px"></i>
-		            	
-		            		
-		            	<%} %>
+		            	<%if(tmp.getNum() != tmp.getGroupNum()){ %>
+		            		<i class="bi bi-arrow-return-right position-absolute" style="top:0;left:-30px"></i>
+		            	<%} %>		            	
 		            	<%-- 댓글 작성자가 로그인된 userName 과 같을때만 삭제 버튼출력 --%>
 		            	<%if(tmp.getWriter().equals(userName)){ %>
 		            		<button data-num="<%=tmp.getNum() %>" class="btn-close position-absolute top-0 end-0 m-1"></button>
@@ -192,8 +131,12 @@
 		                    	<button class="btn btn-sm btn-outline-primary show-reply-btn">댓글</button>  
 			                    <!-- 댓글 입력 폼 (처음에는 숨김) -->
 			                    <div class="d-none form-div">
-			                        <form action="comment-save.jsp" method="post">
-			                            <textarea class="form-control mb-2" rows="2" 
+			                        <form action="save-comment.jsp" method="post">
+			                        	<!-- 원글의 글번호, 댓글 대상자의 userName, 댓글의 그룹번호도 같이 전송해야한다 -->
+			                            <input type="hidden" name="parentNum" value="<%=dto.getNum() %>" />
+			                            <input type="hidden" name="targetWriter" value="<%=tmp.getWriter() %>"/>
+			                            <input type="hidden" name="groupNum" value="<%=tmp.getGroupNum() %>"/>
+			                            <textarea name="content" class="form-control mb-2" rows="2" 
 			                                placeholder="댓글을 입력하세요..."></textarea>
 			                            <button type="submit" class="btn btn-sm btn-success">등록</button>
 			                            <button type="reset" class="btn btn-sm btn-secondary cancel-reply-btn">취소</button>
@@ -206,45 +149,11 @@
 		    	
         	</div><!-- .card -->
 		<%} %>
-		</div>	<!-- .comments -->	
+		</div>	<!-- .comments -->			
 	</div><!-- .container -->
     <script>
     	//클라이언트가 로그인 했는지 여부
     	const isLogin = <%=isLogin %>;
-    	
-		//대댓글 보기 버튼을 눌렀을 때 실행할 함수 등록
-    	document.querySelectorAll(".dropdown-btn").forEach(item => {
-   		  item.addEventListener("click", (e) => {
-   			//click 이벤트가 발생한 그 버튼의 자손요소 중에서 caret up 또는 caret down 요소를 찾는다
-   			const caret = item.querySelector(".bi-caret-up, .bi-caret-down");
-   			//caret 모델을 위 아래로 토글 시킨다
-   			if (caret) {
-   			  caret.classList.toggle("bi-caret-down");
-   			  caret.classList.toggle("bi-caret-up");
-   			}
-   			
-   		    // 1. 버튼의 두 단계 부모 요소로 이동
-   		    const grandParent = item.parentElement.parentElement;
-			//2. 두 단게 부모요소의 바로 다음 형제 요소의 참조 값을 얻어낸다
-   		 	let next = grandParent.nextElementSibling;
-			//3. 반복문 돌면서(다음 형제 요소가 있는 동안에 반복문 돌기
-					
-		
-			)
-	   		while (next) {
-	   			//만일 re-re 클래스가 존재한다면
-	   			if(next.classList.contains("re-re")){
-	   				//d-block 클래스를 토글시켜서 보냈다 숨겼다를 반복시킨다
-	   			 next.classList.toggle("d-block");
-	   			}else{//존재하지 않으면
-	   				//반복문 탈출
-	   				break;
-	   			}
-	   			//다음 형제 요소의 참조값 얻어내기
-	   		  	next = next.nextElementSibling;
-	   		}
-   		  });
-    	});
     	
         //삭제 버튼을 눌렀을때
         document.querySelectorAll(".btn-close").forEach(item => {
@@ -319,6 +228,6 @@
                 formDiv.previousElementSibling.classList.remove("d-none");
             });
         });
-    </script>	
+    </script>
 </body>
 </html>

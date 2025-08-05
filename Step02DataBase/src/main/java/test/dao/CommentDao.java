@@ -24,6 +24,88 @@ public class CommentDao {
 		return dao;
 	}
 
+	public boolean delete(int num) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int rowCount=0;
+		try {
+			conn = new DbcpBean().getConn();
+			// 실행할 sql문
+			String sql = """
+					UPDATE comments
+					SET deleted='yes'
+					WHERE num=?
+
+					""";
+
+			pstmt = conn.prepareStatement(sql);
+			// ? 에 값 바인딩
+			pstmt.setInt(1, num);
+			
+		
+			rowCount = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// null인지 아닌지 체크 안하면 오류가남
+				if (pstmt != null)
+					pstmt.close();
+				if (pstmt != null)
+					conn.close();
+			} catch (Exception e) {
+
+			}
+		}
+		// 변화된 rowCount 값을 조사해서 작업의 성공 여부를 알아낼 수 있다.
+		if (rowCount >= 0) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	// 댓글을 수정하는 메소드
+	public boolean update(CommentDto dto) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		int rowCount = 0;
+		try {
+			conn = new DbcpBean().getConn();
+			String sql = """
+					UPDATE comments
+					SET content=?
+					WHERE num=?
+										""";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getContent());
+			pstmt.setInt(2, dto.getNum());
+
+			rowCount = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// null인지 아닌지 체크 안하면 오류가남
+				if (pstmt != null)
+					pstmt.close();
+				if (pstmt != null)
+					conn.close();
+			} catch (Exception e) {
+
+			}
+		}
+		// 변화된 rowCount 값을 조사해서 작업의 성공 여부를 알아낼 수 있다.
+		if (rowCount >= 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	// 원글(parentNum)의 달린 모든 댓글을 리턴하는 메소드
 	public List<CommentDto> selectList(int parentNum) {
 		List<CommentDto> list = new ArrayList<>();
@@ -34,12 +116,24 @@ public class CommentDao {
 			conn = new DbcpBean().getConn();
 			// 실행할 sql문
 			String sql = """
-					SELECT comments.num,writer,targetWriter,content,deleted,groupNum,comments.createdAt,profileImage
-					FROM comments
-					INNER JOIN users ON comments.writer=users.userName
-					WHERE parentNum=?
-					ORDER BY groupNum ASC,num ASC
-					
+					SELECT c.num,c.writer,c.targetWriter,c.content,c.deleted,c.groupNum
+							,u.profileImage,
+							CASE
+								WHEN SYSDATE - c.createdAt < 1/1440 THEN '1분전'
+								WHEN SYSDATE - c.createdAt < 10/1440 THEN '10분전'
+								WHEN SYSDATE - c.createdAt < 365 THEN
+									TO_CHAR(TRUNC(SYSDATE - c.createdAt)) || '일 전'
+								WHEN SYSDATE - c.createdAt < 
+							ELSE '2년 이상'
+							END AS createdAt,
+							(SELECT COUNT(*)
+							FROM comments
+							WHERE groupNum = c.num AND num != groupNum ) AS replyCount
+					FROM comments c
+					INNER JOIN users u ON c.writer=u.userName
+					WHERE c.parentNum=?
+					ORDER BY c.groupNum ASC,c.num ASC
+
 
 					""";
 
@@ -50,7 +144,7 @@ public class CommentDao {
 			rs = pstmt.executeQuery();
 			// 반복문 돌면서 ResultSet 에 담긴 데이터를 추출해서 리턴해줄 객체에 담는다
 			while (rs.next()) {
-				CommentDto dto =new CommentDto();
+				CommentDto dto = new CommentDto();
 				dto.setNum(rs.getInt("num"));
 				dto.setWriter(rs.getString("writer"));
 				dto.setTargetWriter(rs.getString("targetWriter"));
@@ -60,9 +154,8 @@ public class CommentDao {
 				dto.setDeleted(rs.getString("deleted"));
 				dto.setCreatedAt(rs.getString("createdAt"));
 				dto.setProfileImage(rs.getString("profileImage"));
-				
+				dto.setReplyCount(rs.getInt("replyCount")); //대댓글의 갯수
 				list.add(dto);
-				
 
 			}
 		} catch (Exception e) {
@@ -93,10 +186,10 @@ public class CommentDao {
 		try {
 			conn = new DbcpBean().getConn();
 			String sql = """
-						INSERT INTO comments
-				(num, writer, targetWriter, content, parentNum, groupNum)
-				VALUES(?, ?, ?, ?, ?, ?)
-					""";
+							INSERT INTO comments
+					(num, writer, targetWriter, content, parentNum, groupNum)
+					VALUES(?, ?, ?, ?, ?, ?)
+						""";
 			pstmt = conn.prepareStatement(sql);
 			// ? 에 순서대로 필요한 값 바인딩
 			pstmt.setInt(1, dto.getNum());

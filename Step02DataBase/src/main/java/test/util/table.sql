@@ -1,3 +1,20 @@
+CREATE TABLE gallery(
+	num NUMBER PRIMARY KEY,
+	title VARCHAR2(100) NOT NULL,
+	writer VARCHAR2(20) NOT NULL,
+	content CLOB,
+	createdAt DATE DEFAULT SYSDATE
+	);
+	
+CREATE TABLE gallery_image(
+	num NUMBER PRIMARY KEY,
+	galleryNum NUMBER REFERENCES gallery(num),
+	saveFileName VARCHAR2(100) NOT NULL,
+	createdAt DATE DEFAULT SYSDATE
+);
+CREATE SEQUENCE gallery_image_seq;
+
+
 CREATE TABLE comments(
 	num NUMBER PRIMARY KEY,
 	writer VARCHAR2(20) NOT NULL,
