@@ -16,6 +16,31 @@ public class MemberController {
 	//필요한 의존 객체를 주입 받는다
 	@Autowired private MemberDao dao;
 	
+	@GetMapping("/member/edit")
+	public String edit(int num,Model model){
+		//수정할 회원의 정보를 얻어와서
+		MemberDto dto=dao.getByNum(num);
+		//Model 객체에 덮고
+		model.addAttribute("dto", dto);
+		//view page 로 forward 이동해서 응답
+		return "member/edit";
+	}
+	
+	@GetMapping("/member/delete")
+	public String delete(int num) {
+		/*
+		 * 매개변수에 int num 을 선언하면 요청 파라미터 중에서 num 이라는 파라미터 명으로 전송한다
+		 * 문자열을 자동추출해서 Integer.parseInt() 를 수정해서 실제 int 값으로 바꾼 다음
+		 * 해당 값을 매개 변수에 저장해준다
+		 * int 값으로 바꿀 수 없을 문자열이 넘어오면  에러가 일어난다.
+		 * 
+		 */
+		dao.deleteByNum(num);
+		return "/member/delete";
+		
+	}
+	
+	
 	@PostMapping("/member/save")
 	public String save(MemberDto dto) {
 		/*
