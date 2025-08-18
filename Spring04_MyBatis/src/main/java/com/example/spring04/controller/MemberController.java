@@ -16,6 +16,12 @@ public class MemberController {
 	//필요한 의존 객체를 주입 받는다
 	@Autowired private MemberDao dao;
 	
+	@PostMapping("/member/update")
+	public String update(MemberDto dto) {
+		dao.update(dto);
+		return "member/update";
+	}
+	
 	@GetMapping("/member/edit")
 	public String edit(int num,Model model){
 		//수정할 회원의 정보를 얻어와서
@@ -25,7 +31,7 @@ public class MemberController {
 		//view page 로 forward 이동해서 응답
 		return "member/edit";
 	}
-	
+		
 	@GetMapping("/member/delete")
 	public String delete(int num) {
 		/*
