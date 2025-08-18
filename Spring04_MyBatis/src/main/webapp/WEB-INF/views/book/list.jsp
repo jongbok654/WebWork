@@ -5,18 +5,19 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>/views/member/list.jsp</title>
+<title>/views/book/list.jsp</title>
 </head>
 <body>
 	<div class="container">
-		<a href="${pageContext.request.contextPath }/member/new-form">회원 추가</a>
-		<h1>회원 목록 입니다</h1>
+		<a href="${pageContext.request.contextPath}/book/new-form">책 추가하기</a>
+	<h1>책 목록 입니다</h1>
 		<table>
 			<thead>
 				<tr>
 					<th>번호</th>
-					<th>이름</th>
-					<th>주소</th>
+					<th>제목</th>
+					<th>저자</th>
+					<th>출판사</th>
 					<th>수정</th>
 					<th>삭제</th>
 				</tr>
@@ -31,8 +32,9 @@
 				<c:forEach var="tmp" items="${list }">
 					<tr>
 						<td>${tmp.getNum() }</td>
-						<td>${tmp.name }</td>
-						<td>${tmp.addr }</td>
+						<td>${tmp.title }</td>
+						<td>${tmp.author }</td>
+						<td>${tmp.publisher }</td>
 						<td>
 							<a href="edit?num=${tmp.num }">수정</a>
 						</td>
@@ -46,4 +48,3 @@
 	</div>
 </body>
 </html>
-

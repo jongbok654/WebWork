@@ -15,6 +15,14 @@ public class MemberDaoImpl implements MemberDao {
 	//MyBatis 를 사용할 때 필요한 핵심 객체
 	@Autowired
 	private SqlSession session;
+	
+	//생성자를 이용해서 의존 객체를 주입 받는 것이 더 일반적이다.
+	//@Autowired // 생성자가 오직 1개인 경우에는 어노테이션 생략 가능하다..!
+	public MemberDaoImpl(SqlSession session) {
+		this.session=session;
+	}
+	
+	
 	/*
 	 * .selectList() 을 호출하면 리턴 type 은 무조건 List<t> 이다
 	 * List 의 generic type T 는 그 때 그때 다르다
