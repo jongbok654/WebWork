@@ -40,6 +40,34 @@
 		//세션 유지시간 설정(초단위)
 		session.setMaxInactiveInterval(60*60); //설정하지 않으면 기본30분
 	}
+	
+	
+	//체크박스를 체크인 상태로 로그인 버튼을 누르면 null 이 아니다.(체크하지 않으면 null)
+	String isSave=request.getParameter("isSave");
+	if(isSave != null){
+		//입력한 아이디 비밀번호를 쿠키로 응답하고 1주일 동안 유지 되도록 한다
+		
+		Cookie cook1 = new Cookie("saveUserName",userName);
+		Cookie cook2 = new Cookie("savePassword",password);
+		//쿠키 유지시간 초단위로 설정
+		cook1.setMaxAge(60*60*24*7);
+		cook2.setMaxAge(60*60*24*7);
+		//쿠키 경로
+		//cook1.setPath("/"); // 모든 경로
+		
+		//HttpServletResponse 객체에 Cookie 객체를 덮으면 응답할 때 알아서 쿠키가 응답된다
+		response.addCookie(cook1);
+		response.addCookie(cook2);	
+	}else{//체크 박스를 체크 하지 않았으면 쿠키를 삭제한다
+		//특정 키 값으로 저장된 쿠키값 삭제하기(Value 에는 아무 값이나 넣어도 상관없다)
+		Cookie cook1 = new Cookie("saveUserName","");
+		Cookie cook2 = new Cookie("savePassword",null);
+		//쿠키 유지시간을 0 초로 설정해서 응답하면 쿠키가 삭제되는 효과를 낸다
+		cook1.setMaxAge(0);
+		cook2.setMaxAge(0);
+		response.addCookie(cook1);
+		response.addCookie(cook2);
+	}
 %>
 <!DOCTYPE html>
 <html>

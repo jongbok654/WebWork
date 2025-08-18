@@ -168,6 +168,7 @@
 		                        <div>
 		                            <strong><%=tmp.getWriter() %></strong>
 		                            <span>@<%=tmp.getTargetWriter() %></span>
+		                            <small class="text-muted"<%=tmp.getCreatedAt() %>></small>
 		                        </div>
 		                        <small><%=tmp.getCreatedAt() %></small>
 		                    </div>
