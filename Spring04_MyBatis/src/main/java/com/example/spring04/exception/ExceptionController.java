@@ -27,11 +27,19 @@ public class ExceptionController {
 	}
 	
 	@ExceptionHandler(MemberException.class)
-	public String memberExcpetion(MemberException me, Model model) {
+	public String memberException(MemberException me, Model model) {
 		model.addAttribute("title", "Member 관련 작업창에 에러가 발생했습니다.");
 		model.addAttribute("message", me.getMessage());
 		model.addAttribute("reason", me.reason.name());
 		
 		return "error/member-exception";
+	}
+	@ExceptionHandler(BookException.class)
+	public String BookException(BookException me, Model model) {
+		model.addAttribute("title", "Book 관련 작업창에 에러가 발생했습니다.");
+		model.addAttribute("message", me.getMessage());
+		model.addAttribute("reason", me.reason.name());
+		
+		return "error/book-exception";
 	}
 }

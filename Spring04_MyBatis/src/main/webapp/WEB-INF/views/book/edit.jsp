@@ -9,7 +9,7 @@
 <body>
 	<div class="container">
 		<h1>책 수정 폼</h1>
-		<form action="${pageContext.request.contextPath}/book/update method="post">
+		<form action="${pageContext.request.contextPath}/book/update" method="post">
 			<input type="hidden" name="num" value="${dto.num }"/>
 			<div>
 				<label for="title">제목</label>
