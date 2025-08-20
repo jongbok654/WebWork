@@ -7,6 +7,7 @@
 <body>
 	<div class="container">
 		<a th:href="@{/}">인덱스로</a>
+		<a th:href="@{/member/new-form}">회원 추가</a>
 		<h1>회원 목록 입니다</h1>
 		<table>
 			<thead>
@@ -14,6 +15,8 @@
 					<th>번호</th>
 					<th>이름</th>
 					<th>주소</th>
+					<th>수정</th>
+					<th>삭제</th>
 					<th>자세히보기</th>
 				</tr>
 			</thead>
@@ -26,6 +29,12 @@
 					<td>[[${tmp.num}]]</td>
 					<td th:text="${tmp.name}"></td>
 					<td th:text="${tmp.addr}"></td>
+					<td>
+						<a th:href="@{/member/edit(num=${tmp.num})}">수정</a>
+					</td>
+					<td>
+						<a th:href="@{/member/delete(num=${tmp.num})}">삭제</a>
+					</td>
 					<td>
 						<a th:href="@{/member/detail(num=${tmp.num})}">바로가기</a>
 						<!-- /spring05/member/detail?num=${tmp.num} -->

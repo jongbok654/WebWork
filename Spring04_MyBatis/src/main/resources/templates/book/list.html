@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>/templates/book/list.html</title>
+</head>
+<body>
+	<div class="container">
+		<a th:href="@{/book/new-form}">책 추가하기</a>
+	<h1>책 목록 입니다</h1>
+		<table>
+			<thead>
+				<tr>
+					<th>번호</th>
+					<th>제목</th>
+					<th>저자</th>
+					<th>출판사</th>
+					<th>수정</th>
+					<th>삭제</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--/* 
+					"list" 라는 키값으로 List<MemberDto> 가  담겨 있기 때문에 
+					tmp 는 MemberDto type 이다 
+				*/-->
+				
+					<tr th:each="tmp : ${list }">
+						<td>[[${tmp.num }]] </td>
+						<td th:text="${tmp.title }"></td>
+						<td th:text="${tmp.author }"></td>
+						<td th:text="${tmp.publisher }"></td>
+						<td>
+							<a th:href="@{/book/edit(num=${tmp.num })}">수정</a>
+						</td>
+						<td>
+							<a th:href="@{/book/delete(num=${tmp.num })}">삭제</a>
+						</td>
+					</tr>
+				
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

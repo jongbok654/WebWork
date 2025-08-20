@@ -27,6 +27,7 @@
 		</p>
 		
 		<h3>학점</h3>
+		<!-- th:else if 문이 없기 때문에 and 사용 -->
 		<p th:if="${score >= 90}">A 학점</p>
 		<p th:if="${score >= 80 and score < 90}">B 학점</p>
 		<p th:if="${score >= 70 and score < 80}">C 학점</p>

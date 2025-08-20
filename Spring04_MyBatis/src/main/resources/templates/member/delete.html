@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>/templates/member/delete.html</title>
+</head>
+<body>
+
+	
+<!--/*  
+		<script>
+			alert("[[${param.num}]] 번 회원의 정보를 삭제 했습니다");
+			location.href="[[@{/member/list}]]";
+		</script>
+		
+		위와 동일한 동작을 아래 처럼 할수도 있다 (th:inline="javascript" 이용)
+		하지만 아래코드는 간결하지만 이클립스에서는 에러 표시가 남 (실행에는 상관X)
+	*/-->
+	
+	<script th:inline="javascript">
+		alert( [[${param.num}]] + " 번 회원의 정보를 삭제 했습니다");
+		location.href=[[@{/member/list}]] ;
+	</script>
+</body>
+</html>
