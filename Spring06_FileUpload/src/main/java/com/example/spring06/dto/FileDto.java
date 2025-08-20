@@ -1,4 +1,4 @@
-package come.example.spring06.dto;
+package com.example.spring06.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
