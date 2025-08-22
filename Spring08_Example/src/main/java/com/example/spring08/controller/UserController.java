@@ -18,6 +18,11 @@ public class UserController {
 	
 	private final UserService service;
 	
+	//비밀번호 수정폼 요청 처리
+	@GetMapping("/user/edit-password")
+	public String editPassword() {
+		return "user/edit-password";
+	}
 	@GetMapping("/user/info")
 	public String userInfo(Model model) {
 		//로그인된 userName

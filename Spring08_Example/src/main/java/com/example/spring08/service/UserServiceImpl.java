@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public UserDto getUser(String name) {
 		
-		return null;
+		return dao.getByUserName(name);
 	}
 	
 }
