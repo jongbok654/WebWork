@@ -26,5 +26,11 @@ public class UserServiceImpl implements UserService{
 		dao.insert(dto);
 		
 	}
+
+	@Override
+	public UserDto getUser(String name) {
+		
+		return null;
+	}
 	
 }

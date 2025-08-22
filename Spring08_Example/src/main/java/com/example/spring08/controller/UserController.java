@@ -1,6 +1,8 @@
 package com.example.spring08.controller;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,17 @@ public class UserController {
 	
 	private final UserService service;
 	
+	@GetMapping("/user/info")
+	public String userInfo(Model model) {
+		//로그인된 userName
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		//서비스 객체를 이용해서 사용자 정보를 얻어와서
+		UserDto dto=service.getUser(userName);
+		//Model 객체에 담은다음
+		model.addAttribute("dto", dto);
+		//타임리프 템플릿 페이지에서 응답한다
+		return "user/info";
+	}
 	//회원 가입 요청 처리
 	@PostMapping("/user/signup")
 	public String signup(UserDto dto) {

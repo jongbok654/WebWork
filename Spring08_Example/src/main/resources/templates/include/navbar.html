@@ -36,7 +36,7 @@
 	            		<li class="nav-item  me-2">
 					    <a class="nav-link  p-0"
 					       th:href="@{/user/info}">
-					        <strong><%= userName %></strong>
+					        <strong sec:authentication="name"></strong>
 					    </a>
 						</li>
 		                <li class="nav-item me-2">
@@ -51,11 +51,11 @@
 	            	<th:block sec:authorize="!isAuthenticated()">
 	            		<li class="nav-item">
 	                    <a class="btn btn-outline-light btn-sm me-2"
-	                       th:href="@{/user/loginform.}">로그인</a>
+	                       th:href="@{/user/loginform}">로그인</a>
 	                	</li>
 	                	<li class="nav-item">
 	                    <a class="btn btn-warning btn-sm"
-	                       th:href="@{/user/signup-form"}>회원가입</a>
+	                       th:href="@{/user/signup-form}">회원가입</a>
 	                	</li>
 	            	</th:block>                
                 </ul>

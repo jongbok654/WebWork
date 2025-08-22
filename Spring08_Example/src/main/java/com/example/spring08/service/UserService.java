@@ -4,4 +4,5 @@ import com.example.spring08.dto.UserDto;
 
 public interface UserService {
 	public void createUser(UserDto dto);
+	public UserDto getUser(String name);
 }
