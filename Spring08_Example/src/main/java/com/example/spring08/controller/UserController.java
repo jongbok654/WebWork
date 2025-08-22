@@ -1,15 +1,23 @@
 package com.example.spring08.controller;
 
+import java.util.Map;
+
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.spring08.dto.PwdChangeRequest;
 import com.example.spring08.dto.UserDto;
 import com.example.spring08.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -17,6 +25,27 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	
 	private final UserService service;
+	
+	//사용가능한 아이디 인지 여부를 json 문자열로 리턴하는 메소드
+	@GetMapping("/user/check-id")
+	@ResponseBody
+	public Map<String,Object> checkId(String inputId){
+		
+		return service.canUseId(inputId);
+	}
+	
+	//비밀번호 수정 반영 요청처리
+	@PostMapping("/user/update-password")	
+	public String updatePassword(PwdChangeRequest pcr,HttpSession session,
+			HttpServletRequest req,HttpServletResponse res) {
+		//pcr 객체에는 기존 비밀번호와 새 비밀번호가 들어 있다
+		service.updatePassword(pcr);
+		session.invalidate();
+		
+		new SecurityContextLogoutHandler()
+		.logout(req,res,SecurityContextHolder.getContext().getAuthentication());
+		return "user/update-password";
+	}
 	
 	//비밀번호 수정폼 요청 처리
 	@GetMapping("/user/edit-password")
