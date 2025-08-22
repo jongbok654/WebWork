@@ -3,10 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <title>/templates/home.html</title>
+<!-- /*
+	/include/resource.html 페이지 안에 있는 bootstrap 이라는 이름의 조각을 여기에 insert 하기
+*/ -->
+<th:block th:insert="/include/resource :: bootstrap"></th:block>
 </head>
 <body>
+
+	<th:block th:insert="/include/navbar :: nav"></th:block>
 	<div class="container">
-		<div sec:authorize="isAuthenticated()">
+	<div sec:authorize="isAuthenticated()">
 			<strong sec:authentication="name"></strong> 님 로그인중.....
 			<br>
 			<a th:href="@{/user/logout}">로그아웃</a>
@@ -14,14 +20,13 @@
 		<div sec:authorize="!isAuthenticated()">
 			로그인 중이 아님
 			<a th:href="@{/user/loginform}">로그인 하러가기</a>
-			<a th:href="@{/user/signup-form">회원가입</a>
+			<a th:href="@{/user/signup-form}">회원가입</a>
 		</div>
-		<h1>인덱스 페이지입니다.</h1>
+		<h1>인덱스 페이지 입니다.</h1>
+		
+		<h2>공지사항</h2>
 		<ul>
-			<li><a th:href="@{/study}">공부하러가기</a></li>
-			<li><a th:href="@{/staff/user/list}">회원목록(STAFF , ADMIN 전용)</a></li>
-			<li><a th:href="@{/admin/user/manage}">회원관리(ADMIN 전용)</a></li>
-			
+			<li th:each="tmp : ${notice}">[[${tmp}]]</li>
 		</ul>
 	</div>
 </body>
