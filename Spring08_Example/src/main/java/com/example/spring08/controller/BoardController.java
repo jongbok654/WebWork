@@ -1,5 +1,7 @@
 package com.example.spring08.controller;
 
+import java.util.List;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.spring08.dto.BoardDto;
 import com.example.spring08.dto.BoardListResponse;
+import com.example.spring08.dto.CommentDto;
 import com.example.spring08.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,27 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 	
 	private final BoardService service;
+	
+	@GetMapping("/board/view")
+	public String boardView(int num,Model model) {
+		//서비스를 이용해서 응답에 필요한 데이터 얻어내기
+		BoardDto dto =service.getdetail(num);
+		List<CommentDto> comments = service.getComments(num);
+		//모델 객체에 담고
+		model.addAttribute("dto",dto);
+		model.addAttribute("comments", comments);
+		
+		//로그인된 userName 얻어내기
+		//로그인을 안했으면 "annonymousUser"가 리턴된다
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		System.out.println(userName);
+		boolean isLogin = userName.equals("annonymousUser") ? false : true;
+		//위의 추가 정보도 모델 객체에 담는다
+		model.addAttribute("userName", userName);
+		model.addAttribute("isLogin", isLogin);
+		//타임리프 페이지에서 응답하기
+		return "board/view";
+	}
 	
 	/*
 	 * @ModelAttribute 는 view page 에서 필요한 값을 대신 Model 객체에 담아준다

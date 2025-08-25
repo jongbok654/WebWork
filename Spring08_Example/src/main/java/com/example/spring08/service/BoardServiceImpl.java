@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.spring08.dto.BoardDto;
 import com.example.spring08.dto.BoardListResponse;
+import com.example.spring08.dto.CommentDto;
 import com.example.spring08.repository.BoardDao;
 import com.example.spring08.repository.CommentDao;
 
@@ -98,6 +99,18 @@ public class BoardServiceImpl implements BoardService{
 	public void createdContent(BoardDto dto) {
 		boardDao.insert(dto);
 		//글 정보
+	}
+
+	@Override
+	public BoardDto getdetail(int num) {
+		
+		return boardDao.getByNum(num);
+	}
+
+	@Override
+	public List<CommentDto> getComments(int parentNum) {
+
+		return commentDao.selectList(parentNum);
 	}
 
 }
