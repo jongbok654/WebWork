@@ -15,30 +15,41 @@
 			FROM	
 				(SELECT num, writer, title, viewCount, createdAt
 				FROM board
-				ORDER BY num DESC) result1)
+				 
+				
+				<choose>
+					<when test="search == 'writer'">
+						WHERE writer LIKE '%' || #{keyword} || '%'
+					</when>
+					<when test="search == 'title'">
+						WHERE title LIKE '%' || #{keyword} || '%'
+					</when>
+					<when test="search == 'title_content'">
+						WHERE title LIKE '%' || #{keyword} || '%' OR content LIKE '%' || #{keyword} || '%' 
+					</when>
+				</choose>
+				ORDER BY num DESC
+				)result1)
 		WHERE rnum BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>
 	
-	<select id="selectPageByKeyword" parameterType="boardDto" resultType="boardDto">
-		SELECT *
-		FROM
-			(SELECT result1.*, ROWNUM AS rnum
-			FROM	
-				(SELECT num, writer, title, viewCount, createdAt
-				FROM board
-				WHERE title LIKE '%' || #{keyword} || '%' OR content LIKE '%' || #{keyword} || '%'
-				ORDER BY num DESC) result1)
-		WHERE rnum BETWEEN #{startRowNum} AND #{endRowNum}
-	</select>
-	<select  id="getCount" resultType="int">
+	
+	<select  id="getCount" resultType="int" parameterType="boardDto">
 		SELECT NVL(MAX(ROWNUM), 0) AS count
 					FROM board
+			<choose>
+					<when test="search == 'writer'">
+						WHERE writer LIKE '%' || #{keyword} || '%'
+					</when>
+					<when test="search == 'title'">
+						WHERE title LIKE '%' || #{keyword} || '%'
+					</when>
+					<when test="search == 'title_content'">
+						WHERE title LIKE '%' || #{keyword} || '%' OR content LIKE '%' || #{keyword} || '%' 
+					</when>
+				</choose>
 	</select>
-	<select  id="getCountByKeyword" parameterType="string" resultType="int">
-		SELECT NVL(MAX(ROWNUM),0) AS count
-					FROM board
-					WHERE title LIKE '%' || #{keyword} || '%' OR content LIKE '%' || #{keyword} || '%'
-	</select>
+	
 	<!-- 
 		아래와 같이 insert 를 구성하면
 		1.insert 문이 실행되기전에 시퀀스 값을 미리 읽어와서

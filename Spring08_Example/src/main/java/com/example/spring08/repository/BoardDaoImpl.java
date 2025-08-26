@@ -26,29 +26,13 @@ public class BoardDaoImpl implements BoardDao {
 		return session.selectList("board.selectPage", dto);
 	}
 
-	@Override
-	public List<BoardDto> selectPageByKeyword(BoardDto dto) {
-		
-		return session.selectList("board.selectPageByKeyword", dto);
-	}
 
 	@Override
-	public int getCount() {
+	public int getCount(BoardDto dto) {
 		//resultType : int
-		return session.selectOne("board.getCount");
+		return session.selectOne("board.getCount",dto);
 	}
 
-	@Override
-	public int getCountByKeyword(String keyword) {
-		/*
-		 * parameterType:String
-		 *
-		 * 
-		 */
-		return session.selectOne("board.getCountByKeyword",keyword);
-	}
-
-	@Override
 	public void insert(BoardDto dto) {
 		//이 메소드를 호출하는 시점에 dto.num 은 0 이지만
 		session.insert("board.insert", dto);

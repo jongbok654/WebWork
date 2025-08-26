@@ -191,7 +191,7 @@
 	</div><!-- .container -->
     <script >
     	//클라이언트가 로그인 했는지 여부
-    	const isLogin =/*[[${isLogin}]]*/ false;
+    	const isLogin =[[${isLogin}]];
     	
     	//대댓글 보기 버튼을 눌렀을때 실행할 함수 등록 
     	document.querySelectorAll(".dropdown-btn").forEach(item => {
@@ -262,7 +262,7 @@
     		//원글의 댓글 입력란에 입력했을때 만일 로그인 하지 않았다면
     		if(!isLogin){
     			alert("댓글 작성을 위해 로그인이 필요합니다!");
-    			location.href="@{/user/loginform?url=@{/board/view?num=${dto.num}}}";
+    			location.href="[[@{/user/loginform}]]?url=[[@{/board/view(num=${dto.num})}]]";
     				//"${pageContext.request.contextPath }/user/loginform.jsp?url=${pageContext.request.contextPath }/board/view.jsp?num=<%=num %>";
     		}
     	});
@@ -274,7 +274,7 @@
         		//댓글 버튼을 눌렀을때 만일 로그인 하지 않았다면
         		if(!isLogin){
         			alert("댓글 작성을 위해 로그인이 필요합니다!");
-        			location.href="@{/user/loginform?url=@{/board/view?num=${dto.num}}}";
+        			location.href="[[@{/user/loginform}]]?url=[[@{/board/view(num=${dto.num})}]]";
         				//"${pageContext.request.contextPath }/user/loginform.jsp?url=${pageContext.request.contextPath }/board/view.jsp?num=<%=num %>";
         			return;
         		}

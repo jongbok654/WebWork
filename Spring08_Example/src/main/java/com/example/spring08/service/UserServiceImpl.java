@@ -12,6 +12,7 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.spring08.dto.CommentDto;
 import com.example.spring08.dto.PwdChangeRequest;
 import com.example.spring08.dto.UserDto;
 import com.example.spring08.exception.PasswordException;
@@ -101,7 +102,5 @@ public class UserServiceImpl implements UserService{
 		//UserDao 객체를 이용해서 수정 반영하기 (dto 의 profileImage 는 null 일 수도 있다.)
 		dao.update(dto);
 	}
-
-
 	
 }

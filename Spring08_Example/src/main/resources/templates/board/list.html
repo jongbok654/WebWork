@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>/board/list.html</title>
-<th:block th:insert="/include/resource :: bootstrap"></th:block>
+<th:block th:insert="~{/include/resource :: bootstrap}"></th:block>
 </head>
 <body>
-	<th:block th:insert="/include/navbar :: nav('board')"></th:block>
+	<th:block th:insert="~{/include/navbar :: nav('board')}"></th:block>
 	
 		<div class="container pt-1">
 	<a class="btn btn-outline-primary btn-sm" th:href="@{/board/new-form}">
@@ -20,6 +20,13 @@
 		<div class="col-lg-4  col-md-6  ms-auto ">
 			<form th:action="@{/board/list}" method="get">
 				<div class="input-group">
+					
+					<select name="search" class="form-select">
+						<option th:selected="${dto.search eq 'title_content'}" value="title_content">제목+내용</option>
+						<option th:selected="${dto.search eq 'title'}" value="title">제목</option>
+						<option th:selected="${dto.search eq 'writer'}" value="writer">작성자</option>
+					</select>
+				
 					<input th:value="${#strings.isEmpty(dto.keyword) ? '' : dto.keyword}" 
 					type="text" name="keyword" class="form-control" placeholder="검색어 입력..."/>
 					<button type="submit" class="btn btn-outline-secondary">검색</button>
@@ -27,7 +34,11 @@
 			</form>	
 		</div>
 	</div>
-
+	<p th:if="${dto.keyword ne null}">
+		<strong th:text="${dto.keyword}"></strong>에 대한 검색결과
+		<strong th:text="${dto.totalRow}"></strong> 개	
+	</p>
+	
 	
 	<table class="table table-bordered">
 		<thead>

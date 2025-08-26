@@ -33,4 +33,7 @@ public class BoardDto {
 	
 	//검색 키워드를 담기 위한 필드
 	private String keyword;
+	
+	//검색 조건을 담기 위한 필드
+	private String search;
 }	
