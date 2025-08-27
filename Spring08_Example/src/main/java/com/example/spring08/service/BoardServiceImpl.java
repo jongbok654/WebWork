@@ -27,10 +27,10 @@ public class BoardServiceImpl implements BoardService{
 	public BoardListResponse getBoardList(int pageNum, BoardDto dto) {
 		
 		//한 페이지에 몇개씩 표시할 것인지
-		final int PAGE_ROW_COUNT=3;
+		final int PAGE_ROW_COUNT=5;
 		
 		//하단 페이지를 몇개씩 표시할 것인지
-		final int PAGE_DISPLAY_COUNT=3;
+		final int PAGE_DISPLAY_COUNT=5;
 
 		//보여줄 페이지의 시작 ROWNUM
 		int startRowNum=1+(pageNum-1)*PAGE_ROW_COUNT; //공차수열
@@ -61,6 +61,12 @@ public class BoardServiceImpl implements BoardService{
 		//글 목록 받아오기
 		List<BoardDto> list=boardDao.selectPage(dto);
 		
+		/*
+		 * query 문자열을 미리 구성해서 view page 에 전달하고자 한다
+		 * 
+		 * 검색 키워드가 없으면 query="" 빈 문자열
+		 * 검색 키워드가 있으면 query="&search=검색조건&&keyword=검색어" 형식의 문자열
+		 */
 		String query="";
 		if(dto.getKeyword() != null) {
 			query="search="+dto.getSearch()+ "&keyword=" + dto.getKeyword();
@@ -86,9 +92,9 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
-	public BoardDto getdetail(int num) {
+	public BoardDto getDetail(BoardDto dto) {
 		
-		return boardDao.getByNum(num);
+		return boardDao.getByDto(dto);
 	}
 
 	@Override
@@ -136,6 +142,39 @@ public class BoardServiceImpl implements BoardService{
 		}
 		//글 삭제하기
 		commentDao.delete(num);
+	}
+
+	@Override
+	public void deleteContent(int num) {
+		//글 작성자와 로그인된 userName 이 동일한지 비교해서 동일하지 않으면 예외를 발생시킨다
+		String writer =boardDao.getByNum(num).getWriter();
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		if(!writer.equals(userName)) {
+			throw new RuntimeException("님의 글을 지울 수는 없습니다");
+		}
+		boardDao.delete(num);
+		
+		
+	}
+
+	@Override
+	public BoardDto getData(int num) {
+		
+		return boardDao.getByNum(num);
+	}
+
+	@Override
+	public void updateContent(BoardDto dto) {
+		
+		String writer =boardDao.getByNum(dto.getNum()).getWriter();
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		if(!writer.equals(userName)) {
+			throw new RuntimeException("님의 글을 지울 수는 없습니다");
+		}
+		int rowCount=boardDao.update(dto);
+		if(rowCount ==0) {
+			throw new RuntimeException("글 수정 실패");
+		}
 	}
 
 }

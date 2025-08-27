@@ -11,6 +11,9 @@ public interface BoardDao {
 	//public int getCountByKeyword(String keyword);
 	public void insert(BoardDto dto);
 	public BoardDto getByNum(int num);
+	public BoardDto getByDto(BoardDto dto);
+	public int delete(int num);
+	public int update(BoardDto dto);
 	
 	
 }

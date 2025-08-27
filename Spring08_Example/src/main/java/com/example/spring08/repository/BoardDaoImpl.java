@@ -12,6 +12,10 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 public class BoardDaoImpl implements BoardDao {
+	/*
+	 * 1.mapper
+	 */
+	
 	//의존 객체
 	private final SqlSession session;
 
@@ -44,6 +48,26 @@ public class BoardDaoImpl implements BoardDao {
 	public BoardDto getByNum(int num) {
 		
 		return session.selectOne("board.getByNum", num);
+	}
+
+
+	@Override
+	public BoardDto getByDto(BoardDto dto) {
+		
+		return session.selectOne("board.getByDto", dto);
+	}
+
+
+	@Override
+	public int delete(int num) {
+				return session.delete("board.delete",num);
+	}
+
+
+	@Override
+	public int update(BoardDto dto) {
+		// TODO Auto-generated method stub
+		return session.update("board.update", dto);
 	}
 
 }
