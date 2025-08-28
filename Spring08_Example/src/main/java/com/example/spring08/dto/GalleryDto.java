@@ -2,8 +2,6 @@ package com.example.spring08.dto;
 
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +27,7 @@ public class GalleryDto {
 	//프로필 이미지를 출력하기 위한 필드
 	private String profileImage;
 	
-	private String caption;
-	private MultipartFile image;
+	//private String caption;
+	//private MultipartFile image;
 
 }

@@ -15,68 +15,40 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GalleryServiceImpl implements GalleryService{
 	
-	private final GalleryMapper mapper;
+	//의존 객체를 생성자로 주입받기
+	private final GalleryMapper galleryMapper;
+	
 	 @Value("${file.location}")
 	    private String fileLocation;
+	 
+	 
+	 @Override
+	 public List<GalleryDto> getGalleryList() {
+		
+		return galleryMapper.getListWithImages();
+	 }
+	 @Override
+	 public int upload(GalleryDto dto) {
+		// TODO Auto-generated method stub
+		return 0;
+	 }
+	 @Override
+	 public List<GalleryDto> getListWithImages() {
+		// TODO Auto-generated method stub
+		return null;
+	 }
+	 @Override
+	 public List<GalleryImageDto> getImageList(int galleryNum) {
+		// TODO Auto-generated method stub
+		return null;
+	 }
+	 @Override
+	 public GalleryDto getData(int num) {
+		// TODO Auto-generated method stub
+		return null;
+	 }
 	
-	@Override
-	public int upload(GalleryDto dto) {
-		
-		return mapper.insert(dto);
-	}
-
-	@Override
-	public String galleryNew() {
-
-		return null;
-	}
-
-	@Override
-	public List<GalleryDto> getListWithImages() {
-
-		return mapper.getListWithImages();
-	}
-
-	@Override
-	public List<GalleryDto> getList() {
-
-		return mapper.getList();
-	}
-
-	@Override
-	public GalleryDto getData(int num) {
-
-		return mapper.getData(num);
-	}
-
-	@Override
-	public int update(GalleryDto dto) {
-
-		return 0;
-	}
-
-	@Override
-	public int delete(int num) {
-
-		return 0;
-	}
-
-	@Override
-	public int deleteImage(int imageNum) {
-
-		return 0;
-	}
-
-	@Override
-	public int addImage(GalleryImageDto imageDto) {
-
-		return mapper.insertImage(GalleryImageDto imagedto);
-	}
-
-	@Override
-	public List<GalleryImageDto> getImageList(int galleryNum) {
-		
-		return null;
-	}
+	
+	
 
 }

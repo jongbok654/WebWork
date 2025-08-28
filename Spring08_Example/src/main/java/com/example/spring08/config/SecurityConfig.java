@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+			
 
 @Configuration	//설정에 관련된 bean 이라고 알려준다
 @EnableWebSecurity //Spring Security 를 설정하기 위한 어노테이션
@@ -26,7 +27,7 @@ public class SecurityConfig {
 		//security 를 통과하는 white list
 		String[] whiteList = {"/", "/user/loginform","/user/login-fail","/user/expired"
 								,"/user/signup-form","/user/signup","/test/**","/user/check-id","/board/list"
-								,"/board/view","/upload/**"};
+								,"/board/view","/upload/**","/gallery/list","/gallery/view"};
 		
 		httpSecurity
 		.csrf(csrf->csrf.disable())//csrf 검증 사용하지 않기
