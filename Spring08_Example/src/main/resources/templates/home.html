@@ -18,6 +18,24 @@
 		<ul>
 			<li th:each="tmp : ${notice}">[[${tmp}]]</li>
 		</ul>
+		<!-- 3 가지 경우 같은 출력 값을 보냄 -->
+		<p>
+			userName : <strong>[[${#authentication.name}]]</strong>
+		</p>
+		<p>
+			userName : <strong sec:authentication="name"></strong>
+		</p>
+		<p>
+			userName : <strong th:text="${#authentication.name}"></strong>
+		</p>
+		
+		<p sec:authorize="isAuthenticated()">로그인 중이에요!</p>
+		<p th:if="${#authentication.name == 'anonymousUser'}">로그인 중이에요!</p>
+		
+		<!-- /* 로그인을 하지 않았을 때 특정 요소를 렌더링 하는 방법 */ -->
+		<p sec:authorize="!isAutheticated()">로그인 하지 않았어요</p>
+		<p th:if="${#authentication.name == 'anonymousUser'}">로그인 하지 않았어요</p>
+		
 	</div>
 </body>
 </html>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -15,6 +16,7 @@ import com.example.spring08.dto.BoardDto;
 import com.example.spring08.dto.BoardListResponse;
 import com.example.spring08.dto.CommentDto;
 import com.example.spring08.service.BoardService;
+import com.example.spring08.service.CommentService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 	
 	private final BoardService service;
+	private final CommentService commentService;
 	
 	//게시글 수정 반영 요청 처리
 	@PostMapping("/board/update")
@@ -47,28 +50,6 @@ public class BoardController {
 		return "board/delete";
 	}
 	
-	@PostMapping("/board/comment-update")
-	public String commentUpdate(CommentDto dto) {
-		service.updateComment(dto);
-		
-		return "redirect:/board/view?num=" + dto.getParentNum();
-	}
-	
-	
-	@GetMapping("/board/comment-delete")
-	public String boardDelete(CommentDto dto) {
-		//dto에는 삭제할 댓글의 글 번호와 원글의 글 번호가 들어 있다
-		service.deleteComment(dto.getNum());
-		
-		return "redirect:/board/view?num=" + dto.getParentNum();
-	}
-	
-	@PostMapping("/board/save-comment")
-	public String boardSave(CommentDto dto) {
-		//서비스를 이용해서 새로운 댓글을 저장한다
-		service.createComment(dto);
-		return  "redirect:/board/view?num="+dto.getParentNum();
-	}
 	
 	@GetMapping("/board/view")
 	public String boardView(BoardDto requestDto,Model model) {
@@ -89,20 +70,12 @@ public class BoardController {
 		
 		model.addAttribute("query", query);
 		
-		List<CommentDto> comments = service.getComments(requestDto.getNum());
+		//댓글 목록은 원 그르이 글 번호를 전달해서 얻어낸다
+		List<CommentDto> comments = commentService.getComments(requestDto.getNum());
 		//모델 객체에 담고
 		model.addAttribute("dto",dto);
 		//model.addAttribute("comments", comments);
 		model.addAttribute("commentList", comments); // 템플릿 키에 맞춤
-		
-		//로그인된 userName 얻어내기
-		//로그인을 안했으면 "annonymousUser"가 리턴된다
-		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		System.out.println(userName);
-		boolean isLogin = userName.equals("anonymousUser") ? false : true;
-		//위의 추가 정보도 모델 객체에 담는다
-		model.addAttribute("userName", userName);
-		model.addAttribute("isLogin", isLogin);
 		//타임리프 페이지에서 응답하기
 		return "board/view";
 	}

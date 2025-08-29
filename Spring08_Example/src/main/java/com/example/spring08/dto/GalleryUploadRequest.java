@@ -2,6 +2,15 @@ package com.example.spring08.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class GalleryUploadRequest {
 	private String title;
 	private String content;
