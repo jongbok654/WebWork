@@ -9,8 +9,8 @@ import com.example.spring09.entity.Book;
 
 public interface BookRepository extends JpaRepository<Book,Long> {
 	
-	public List<Book> findAllbyOrderByIdDESC();
-	public List<Book> findAllbyOrderByIdASC();
+	public List<Book> findAllByOrderByIdDesc();
+	public List<Book> findAllByOrderByIdAsc();
 	
 	@Query("SELECT b FROM BOOK_INFO b ORDER BY b.id DESC")
 	public List<Book> findAllQuery();
