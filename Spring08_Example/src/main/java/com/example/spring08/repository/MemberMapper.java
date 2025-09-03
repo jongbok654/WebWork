@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 
 import com.example.spring08.dto.MemberDto;
-//MyBatis 의 MApper 를 인터페이스 설정으로 사용할 수 있도록 어노ㅔ이션 추가
+//MyBatis 의 MApper 를 인터페이스 설정으로 사용할 수 있도록 어노테이션 추가
 //이 인터페이스를 구현한 클래스가 자동으로 만들어지고 해당 클래스로 만들어진 객체가 bean 으로 등록된다.
 // 해당 bean 을 Service 혹은 Dao 에 주입을 받아서 사용할 수 있따
 // Dap 에 주입해서 사용하면 번거로우니 특별한 이유가 없다면 Service 에 주입해서 사용하면 된다

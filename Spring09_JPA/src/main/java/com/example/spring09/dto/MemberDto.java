@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class MemberDto {
-	private int num;
+	private Integer num;
 	private String name;
 	private String addr;
 	
@@ -22,6 +22,14 @@ public class MemberDto {
 				.num(entity.getNum())
 				.name(entity.getName())
 				.addr(entity.getAddr())
+				.build();
+	}
+	//객체의 필드에 저장된 값을 이용해서 Entity 객체를 만들어서 반환하는 non static 메소드
+	public Member toEntity() {
+		return Member.builder()
+				.num(this.num)
+				.name(this.name)
+				.addr(addr) //멤버 메소드 안에서 this. 는 생략 가능하
 				.build();
 	}
 }
