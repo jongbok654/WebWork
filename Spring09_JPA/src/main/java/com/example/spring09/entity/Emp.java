@@ -26,7 +26,7 @@ public class Emp {
 	private Integer mgr;
 	private LocalDate hiredate;
 	private Double sal;
-	private Double comn;
+	private Double comm;
 	//private Integer deptno; // Dept entity 외 deptno 를 참조
 	
 	//Entity 안에 또 다른 Entity 가 있으면 편리하지 않을까?
