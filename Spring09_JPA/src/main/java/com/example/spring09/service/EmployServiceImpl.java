@@ -52,5 +52,14 @@ public class EmployServiceImpl implements EmployService{
 		//한 줄 코딩
 		return DeptDto.toDto(deptRepo.findById(deptno).get());
 	}
+	@Override
+	public List<EmpDto> getEmpListByDeptno(int deptno) {
+		List<EmpDto> empList1=empRepo.findEmps(deptno).stream().map(EmpDto::toDto).toList();
+		List<EmpDto> empList2=empRepo.findEmps2(deptno).stream().map(EmpDto::toDto).toList();
+		List<EmpDto> empList3=empRepo.findByDept_deptnoOrderByEnameAsc(deptno)
+				.stream().map(EmpDto::toDto).toList();
+		
+		return empList1;
+	}
 
 }

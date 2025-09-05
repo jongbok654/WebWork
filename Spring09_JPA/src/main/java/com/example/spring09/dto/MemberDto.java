@@ -2,6 +2,7 @@ package com.example.spring09.dto;
 
 import com.example.spring09.entity.Member;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Schema(name = "Member" , description = "회원 정보 DTO")
 public class MemberDto {
 	private Integer num;
 	private String name;
