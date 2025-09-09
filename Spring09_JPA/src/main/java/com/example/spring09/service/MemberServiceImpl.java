@@ -3,6 +3,10 @@ package com.example.spring09.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.query.SortDirection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +22,11 @@ import lombok.RequiredArgsConstructor;
 // lombok 의 생성자를 자동으로 만들어 주도록 한다
 public class MemberServiceImpl implements MemberService {
 
+	//한 페이지에서 몇개의 row 를 출력할 것인지에 대한 값
+	final int PAGE_ROW_COUNT=10;
+	//페이징 처리 UI 에 페이지 번호를 몇개씩 출력할지에 대한 값
+	final int PAGE_DISPLAY_COUNT=5;
+	
 	//JPA Repository 객체를 주입 받는다
 	private final MemberRepository memberRepo;
 	
@@ -129,6 +138,21 @@ public class MemberServiceImpl implements MemberService {
 		memberRepo.deleteById(num);
 		
 		return MemberDto.toDto(m);
+	}
+
+	@Override
+	public MemberPageResponse getPage(int pageNum) {
+		Sort sort=Sort.by(Sort.Direction.DESC,"num");
+		
+		Pageable pageRequest= PageRequest.of(pageNum-1, PAGE_ROW_COUNT,sort);
+		
+		//org.springframework.data.domain 패키지의 Page type 을 import 해야한다
+		 Page<Member> page = memberRepo.findAll(pageRequest);
+		 //Page 객체를 stream 으로 만들어서 dto 의 list 를 얻어낸다
+		 List<MemberDto> list =page.stream().map(MemberDto :: toDto).toList();
+		 
+		
+		return null;
 	}
 
 }

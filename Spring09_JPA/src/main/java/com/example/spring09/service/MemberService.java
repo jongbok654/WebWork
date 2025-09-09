@@ -10,4 +10,5 @@ public interface MemberService {
 	public MemberDto addMember(MemberDto dto);
 	public void updateMember(MemberDto dto);
 	public MemberDto deleteMember(int num);
+	public MemberPageResponse getPage(int pageNum);
 }
