@@ -1,8 +1,6 @@
-package com.example.spring09.service;
+package com.example.spring09.dto;
 
 import java.util.List;
-
-import com.example.spring09.dto.MemberDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +15,6 @@ public class MemberPageResponse {
 	private List<MemberDto> list; //회원 목록
 	private int startPageNum;
 	private int endPageNum;	
-	private int totlaPageCount;
+	private int totalPageCount;
 	private int pageNum;
 }

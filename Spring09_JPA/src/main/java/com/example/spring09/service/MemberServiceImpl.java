@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.spring09.dto.MemberDto;
+import com.example.spring09.dto.MemberListRequest;
+import com.example.spring09.dto.MemberPageResponse;
 import com.example.spring09.entity.Member;
 import com.example.spring09.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -141,18 +143,63 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public MemberPageResponse getPage(int pageNum) {
-		Sort sort=Sort.by(Sort.Direction.DESC,"num");
+	public MemberPageResponse getPage(MemberListRequest request) {
+		//페이지 번호
+		int pageNum = request.getPageNum();
 		
-		Pageable pageRequest= PageRequest.of(pageNum-1, PAGE_ROW_COUNT,sort);
+		// num 에 대해서 내림차순 정렬하겠다는 Sort 객체 
+		Sort sort=Sort.by(Sort.Direction.DESC, "num");
 		
-		//org.springframework.data.domain 패키지의 Page type 을 import 해야한다
-		 Page<Member> page = memberRepo.findAll(pageRequest);
-		 //Page 객체를 stream 으로 만들어서 dto 의 list 를 얻어낸다
-		 List<MemberDto> list =page.stream().map(MemberDto :: toDto).toList();
-		 
+		// pageNum 과 page row count 와 정렬 객체를 전달해서 원하는 PageRequest 를 만들어내고 
+		PageRequest pageRequest = PageRequest.of(pageNum-1, PAGE_ROW_COUNT, sort);
 		
-		return null;
+		//검색 키워드
+		String keyword= request.getKeyword();
+		
+		Page<Member>page=null;
+		
+		//만일 키워드가 비었으면 모든 회원정보 중에서 원하는 페이지의 결과 얻어내기 
+		if(keyword==null ||keyword.isEmpty()) {
+			page=memberRepo.findAll(pageRequest);
+		}else {//키워드가 있으면 키워드에 해당하는 결과 얻어내기
+			
+			switch(request.getCondition()) {
+			case "name":
+				page=memberRepo.findByNameContaining(keyword, pageRequest);
+				break;
+			case "addr":
+				page=memberRepo.findByAddrContaining(keyword, pageRequest);
+				break;
+			case "name_addr":
+				page=memberRepo.findByNameContainingOrAddrContaining(keyword,keyword, pageRequest);
+				break;
+			}
+		}
+		
+		// org.springframework.data.domain 페키지의 Page type 을 import 해야 한다.
+		//Page<Member> page=memberRepo.findAll(pageRequest);
+		
+		// Page 객체를 stream 으로 만들어서 dto 의 List 를 얻어낸다.
+		List<MemberDto> list=page.stream().map(MemberDto::toDto).toList();
+		
+		//하단 시작 페이지 번호 
+		int startPageNum = 1 + ((pageNum-1)/PAGE_DISPLAY_COUNT)*PAGE_DISPLAY_COUNT;
+		//하단 끝 페이지 번호
+		int endPageNum=startPageNum+PAGE_DISPLAY_COUNT-1;
+		//전체 페이지의 갯수 구하기 (Page 객체에 이미 계산되어서 들어 있다)
+		int totalPageCount=page.getTotalPages();
+		//끝 페이지 번호가 이미 전체 페이지 갯수보다 크게 계산되었다면 잘못된 값이다.
+		if(endPageNum > totalPageCount){
+			endPageNum=totalPageCount; //보정해 준다. 
+		}
+		
+		return MemberPageResponse.builder()
+				.list(list)
+				.pageNum(pageNum)
+				.totalPageCount(totalPageCount)
+				.startPageNum(startPageNum)
+				.endPageNum(endPageNum)
+				.build();
 	}
 
 }
