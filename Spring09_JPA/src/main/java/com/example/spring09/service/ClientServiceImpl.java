@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.spring09.dto.ClientDto;
+import com.example.spring09.dto.MemberDto;
 import com.example.spring09.entity.Client;
+import com.example.spring09.entity.Member;
 import com.example.spring09.repository.ClientRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -61,6 +63,16 @@ public class ClientServiceImpl implements ClientService{
 		entity.setUserName(dto.getUserName());
 		entity.setBirthday(dto.getBirthday());
 		
+	}
+
+	@Override
+	public ClientDto deleteClient(long num) {
+		Client c =clientRepo.findById(num).get();
+
+		// 번호를 이용해서 삭제 (씰패시 예외가 발생하지는 않는다
+				clientRepo.deleteById(num);
+				
+				return ClientDto.toDto(c);
 	}
 
 }

@@ -21,4 +21,6 @@ public interface ClientService {
 	
 	//전체 수정(이름과 생일)
 	void update(ClientDto dto);
+	
+	public ClientDto deleteClient(long num);
 }
