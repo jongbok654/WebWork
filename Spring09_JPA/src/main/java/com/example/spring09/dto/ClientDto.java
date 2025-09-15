@@ -2,10 +2,13 @@ package com.example.spring09.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.example.spring09.entity.Client;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -28,7 +31,10 @@ public class ClientDto {
 	@Size(max=20, message="이름은 최대 20자 까지 가능합니다")
 	private String userName;
 	
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일 HH:mm")
 	private LocalDateTime createdAt;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일 HH:mm")
 	private LocalDateTime updatedAt;
 	
 	/*
@@ -67,4 +73,11 @@ public class ClientDto {
 	                .birthday(this.birthday)
 	                .build();
 	    }
+
+	   // 단순 출력용 생일 문자 형식 
+	   public String getFormattedBirthday() {
+		   String result = birthday != null ? birthday.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")) : null;
+		   return result;
+	   }
+	   
 }
