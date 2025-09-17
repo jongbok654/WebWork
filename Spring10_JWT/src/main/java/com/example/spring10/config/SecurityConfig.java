@@ -34,7 +34,7 @@ public class SecurityConfig {
 	 */
 	@Bean //메소드에서 리턴되는 SecurityFilterChain 을 bean 으로 만들어준다.
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-		String[] whiteList= {"/swagger-ui/**","/v3/api-docs/**"};
+		String[] whiteList= {"/swagger-ui/**","/v3/api-docs/**","/v1/notice"};
 		 
 		httpSecurity
 		.csrf(csrf->csrf.disable())

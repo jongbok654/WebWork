@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 /*
@@ -95,7 +94,7 @@ public class JwtUtil {
                 .setIssuer("your-issuer") // 추가된 issuer(발급한 서비스명)
                 .setIssuedAt(new Date(System.currentTimeMillis())) //발급 시간
                 .setExpiration(new Date(System.currentTimeMillis() + expiration)) //파기되는 시간
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256) //HS256 알고리즘으로 서명
+                .signWith(getSigningKey()) //HS256 알고리즘으로 서명
                 .compact();
     }
     // token 검증하는 메소드 
