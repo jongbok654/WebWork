@@ -14,9 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.spring08.dto.CommentDto;
 import com.example.spring08.dto.PwdChangeRequest;
-import com.example.spring08.dto.UserDto;
 import com.example.spring08.exception.PasswordException;
 import com.example.spring08.repository.UserDao;
+import com.example.spring08.dto.UserDto;
 
 import lombok.RequiredArgsConstructor;
 

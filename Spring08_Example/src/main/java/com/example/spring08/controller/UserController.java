@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.spring08.dto.PwdChangeRequest;
-import com.example.spring08.dto.UserDto;
 import com.example.spring08.service.UserService;
+import com.example.spring10.dto.UserDto;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
