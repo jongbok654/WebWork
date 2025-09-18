@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,15 +17,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.spring10.dto.UserDto;
+import com.example.spring10.service.UserService;
 import com.example.spring10.util.JwtUtil;
+
+import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/v1")
 @RestController
+@RequiredArgsConstructor
 public class UserController {
 	
-	@Autowired JwtUtil jwtUtil;
+	//각종 객체 생성자 주입
+	public final JwtUtil jwtUtil;
 	//SecurityConfig 클래스에서 Bean 이된 AuthenticationManager 객체 주입받기 
-	@Autowired AuthenticationManager authManager;
+	public final AuthenticationManager authManager;
+	
+	public final UserService userService;
+	
+	@GetMapping("/user")
+	public UserDto user() {
+		
+		//spring security context 로 부터 로그인된 userName 을 얻어낸다
+		String userName=SecurityContextHolder.getContext().getAuthentication().getName();
+		return userService.getUser(userName);
+	}
 	
 	@GetMapping("/ping")
 	public String ping() {

@@ -82,6 +82,11 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
+    /*
+     * userName 과 추가정보(claims) 를 전달하면 해당 정보를 token 에 저장하고
+     * 
+     * 만들어진 token 문자열을 리턴하는 메소드
+     */
     public String generateToken(String username, Map<String, Object> extraClaims) {
         Map<String, Object> claims = new HashMap<>(extraClaims);
         return createToken(claims, username);

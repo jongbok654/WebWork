@@ -1,6 +1,10 @@
 package com.example.spring10.dto;
 
+import java.time.LocalDateTime;
+
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +22,10 @@ public class UserDto {
 	private String email;
 	private String role; 
 	private String profileImage;
-	private String createdAt;
-	private String updatedAt;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일 HH:mm")
+	private LocalDateTime createdAt;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일 HH:mm")
+	private LocalDateTime updatedAt;
 	// <input type="file" name="profileFIle" > 을 처리하기 위한 필드
 	private MultipartFile profileFile;
 }
